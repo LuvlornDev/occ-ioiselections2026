@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP Crash Course — IOI Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #252535;
+    --accent: #00ffc3;
+    --accent2: #7b5ea7;
+    --accent3: #ff6b6b;
+    --accent4: #ffd93d;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --code-bg: #0d0d14;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a0a0f 0%, #111128 50%, #0a0a0f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse, rgba(0,255,195,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #00ffc3, #7b5ea7, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: var(--muted); margin-top: 0.5rem; font-size: 0.95rem; letter-spacing: 1px; }
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent2), #5e3f8a);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    margin-top: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.2rem 4rem; }
+
+  /* SECTION */
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .section-title .icon { font-size: 1.5rem; }
+  .section-subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
+
+  /* CONCEPT CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+  .card.red::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+  .card.purple::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .card.yellow::before { background: linear-gradient(90deg, var(--accent4), transparent); }
+
+  .card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: var(--accent);
+  }
+  .card.red h3 { color: var(--accent3); }
+  .card.purple h3 { color: var(--accent2); }
+  .card.yellow h3 { color: var(--accent4); }
+
+  .card p { color: #b0b0c8; line-height: 1.7; margin-bottom: 0.8rem; font-size: 0.93rem; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* CODE */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 1rem 0;
+    overflow: hidden;
+  }
+  .code-header {
+    background: #0d0d18;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    padding: 1.2rem 1.2rem;
+    overflow-x: auto;
+    color: #c8c8e0;
+  }
+
+  /* COMPLEXITY */
+  .complexity-row {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin: 0.8rem 0;
+  }
+  .complexity-pill {
+    background: rgba(0,255,195,0.08);
+    border: 1px solid rgba(0,255,195,0.2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+  }
+  .complexity-pill.red {
+    background: rgba(255,107,107,0.08);
+    border-color: rgba(255,107,107,0.2);
+    color: var(--accent3);
+  }
+  .complexity-pill.purple {
+    background: rgba(123,94,167,0.08);
+    border-color: rgba(123,94,167,0.2);
+    color: var(--accent2);
+  }
+
+  /* VISUAL */
+  .visual-box {
+    background: #0c0c15;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 2;
+    margin: 1rem 0;
+    overflow-x: auto;
+    color: #9090b8;
+  }
+  .hl { color: var(--accent); font-weight: 700; }
+  .hl2 { color: var(--accent3); font-weight: 700; }
+  .hl3 { color: var(--accent4); font-weight: 700; }
+  .hl4 { color: var(--accent2); font-weight: 700; }
+
+  /* TIP */
+  .tip {
+    background: rgba(0,255,195,0.04);
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    border-radius: 0 6px 6px 0;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+    color: #a0c8b8;
+  }
+  .tip.warn { background: rgba(255,107,107,0.04); border-color: var(--accent3); color: #c8a0a0; }
+  .tip.info { background: rgba(123,94,167,0.04); border-color: var(--accent2); color: #b0a0c8; }
+  .tip strong { color: var(--accent); }
+  .tip.warn strong { color: var(--accent3); }
+  .tip.info strong { color: var(--accent2); }
+
+  /* STEPS */
+  .steps { list-style: none; margin: 0.8rem 0; }
+  .steps li {
+    padding: 0.5rem 0 0.5rem 2rem;
+    position: relative;
+    color: #b0b0c8;
+    font-size: 0.92rem;
+    border-left: 1px solid var(--border);
+    margin-left: 0.8rem;
+  }
+  .steps li::before {
+    content: counter(step);
+    counter-increment: step;
+    position: absolute;
+    left: -0.9rem;
+    top: 0.5rem;
+    width: 1.7rem; height: 1.7rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .steps { counter-reset: step; }
+
+  /* INTERACTIVE DEMO */
+  .demo-box {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+  }
+  .demo-box label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.5px;
+  }
+  .demo-box input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    width: 100%;
+    margin-bottom: 0.8rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .demo-box input:focus { border-color: var(--accent); }
+  .demo-btn {
+    background: linear-gradient(135deg, rgba(0,255,195,0.15), rgba(0,255,195,0.05));
+    border: 1px solid rgba(0,255,195,0.3);
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .demo-btn:hover { background: rgba(0,255,195,0.2); border-color: var(--accent); }
+  .demo-result {
+    margin-top: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    min-height: 1.5rem;
+    background: rgba(0,255,195,0.04);
+    border-radius: 4px;
+    padding: 0.5rem 0.8rem;
+    display: none;
+  }
+  .demo-result.show { display: block; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 2rem 0; }
+
+  /* SYNTAX HIGHLIGHTING COLORS */
+  .kw { color: #ff79c6; }
+  .fn { color: #50fa7b; }
+  .num { color: #bd93f9; }
+  .str { color: #f1fa8c; }
+  .cm { color: #6272a4; font-style: italic; }
+  .tp { color: #8be9fd; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ CP Crash Course</h1>
+  <p>COMPETITIVE PROGRAMMING · IOI PREPARATION</p>
+  <div class="badge">🏆 All Topics · C++ Focus</div>
+</header>
+
+<nav id="nav">
+  <button class="active" onclick="showSection('interactives')">Interactives</button>
+  <button onclick="showSection('dp')">DP</button>
+  <button onclick="showSection('prefix')">Prefix Sum</button>
+  <button onclick="showSection('bfs')">BFS</button>
+  <button onclick="showSection('dfs')">DFS</button>
+  <button onclick="showSection('binary')">Binary Conv.</button>
+  <button onclick="showSection('bsearch')">Binary Search</button>
+  <button onclick="showSection('subarray')">Best Subarray</button>
+</nav>
+
+<main>
+
+<!-- =================== INTERACTIVES =================== -->
+<div id="interactives" class="section active">
+  <div class="section-title"><span class="icon">🔁</span> Interactive Problems</div>
+  <div class="section-subtitle">Problems where your program talks back and forth with the judge</div>
+
+  <div class="card">
+    <h3>What is an Interactive Problem?</h3>
+    <p>Unlike standard problems, interactives have a <strong>hidden state</strong> (a number, a sequence, a graph). Your program must query the judge and use the answers to figure out the answer. The judge responds in real time.</p>
+    <div class="visual-box">
+Your program          Judge (hidden: N=42)
+──────────────────────────────────────────
+? 50          →       "lower"
+? 25          →       "higher"
+? 37          →       "higher"
+? 44          →       "lower"
+! 42          →       "correct ✓"
+    </div>
+  </div>
+
+  <div class="card yellow">
+    <h3>⚠️ The Most Critical Rule: Flush!</h3>
+    <p>After every output, you <strong>MUST flush</strong> stdout. Without it, your output sits in a buffer and the judge never sees it — you get TLE or WA.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="cm">// Method 1: endl (flushes automatically)</span>
+cout &lt;&lt; answer &lt;&lt; endl;
+
+<span class="cm">// Method 2: explicit flush (faster)</span>
+cout &lt;&lt; answer &lt;&lt; <span class="str">'\n'</span> &lt;&lt; flush;
+
+<span class="cm">// Method 3: at program start (safest)</span>
+cout.sync_with_stdio(<span class="num">false</span>);
+cin.tie(&amp;cout); <span class="cm">// ties cin to cout, auto-flushes before read</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Template: Guess the Number (Binary Search style)</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="kw">#include</span> &lt;bits/stdc++.h&gt;
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    ios_base::sync_with_stdio(<span class="num">false</span>);
+    cin.tie(&amp;cout); <span class="cm">// auto-flush before every cin</span>
+
+    <span class="kw">int</span> lo = <span class="num">1</span>, hi = <span class="num">1000</span>;
+
+    <span class="kw">while</span> (lo &lt; hi) {
+        <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+        cout &lt;&lt; <span class="str">"? "</span> &lt;&lt; mid &lt;&lt; endl; <span class="cm">// endl flushes!</span>
+
+        string resp;
+        cin &gt;&gt; resp;
+
+        <span class="kw">if</span> (resp == <span class="str">"lower"</span>)       hi = mid - <span class="num">1</span>;
+        <span class="kw">else if</span> (resp == <span class="str">"higher"</span>)  lo = mid + <span class="num">1</span>;
+        <span class="kw">else break</span>; <span class="cm">// "correct"</span>
+    }
+    cout &lt;&lt; <span class="str">"! "</span> &lt;&lt; lo &lt;&lt; endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="card purple">
+    <h3>Common Patterns in Interactives</h3>
+    <p><strong>Binary Search queries</strong> — find a value in [L, R] in O(log N) queries.</p>
+    <p><strong>Comparison queries</strong> — ask "is A[i] > A[j]?" to sort or find max.</p>
+    <p><strong>Bitwise queries</strong> — ask about individual bits to reconstruct a number.</p>
+    <p><strong>Graph queries</strong> — ask "is there an edge between u and v?" to discover hidden graph structure.</p>
+  </div>
+
+  <div class="tip"><strong>Tip:</strong> Always check the query limit! If you have N=1000 and 10 queries, you need binary search. If you have N² queries, brute force may work.</div>
+</div>
+
+<!-- =================== DP =================== -->
+<div id="dp" class="section">
+  <div class="section-title"><span class="icon">🧩</span> Dynamic Programming</div>
+  <div class="section-subtitle">Break hard problems into overlapping subproblems with optimal substructure</div>
+
+  <div class="card">
+    <h3>The DP Mindset</h3>
+    <p>DP = <strong>memoized recursion</strong> or <strong>bottom-up table filling</strong>. Ask yourself: "What is the state? What is the transition?"</p>
+    <ol class="steps">
+      <li>Define <strong>state</strong>: what variables fully describe a subproblem? (e.g., dp[i] = answer for first i elements)</li>
+      <li>Define <strong>base case</strong>: what's trivially known? (e.g., dp[0] = 0)</li>
+      <li>Write the <strong>transition</strong>: how does dp[i] depend on smaller states?</li>
+      <li>Determine <strong>order</strong>: fill from smaller → larger states.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Example 1: Fibonacci (simplest DP)</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="cm">// dp[i] = i-th Fibonacci number</span>
+<span class="cm">// Transition: dp[i] = dp[i-1] + dp[i-2]</span>
+vector&lt;<span class="kw">long long</span>&gt; dp(n+<span class="num">1</span>);
+dp[<span class="num">0</span>] = <span class="num">0</span>; dp[<span class="num">1</span>] = <span class="num">1</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i &lt;= n; i++)
+    dp[i] = dp[i-<span class="num">1</span>] + dp[i-<span class="num">2</span>];</pre>
+    </div>
+  </div>
+
+  <div class="card purple">
+    <h3>Example 2: 0/1 Knapsack</h3>
+    <p>Given N items with weights w[i] and values v[i], fill a bag of capacity W to maximize value. Each item used at most once.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="cm">// dp[i][j] = max value using first i items, capacity j</span>
+<span class="cm">// Transition:</span>
+<span class="cm">//   Don't take item i: dp[i][j] = dp[i-1][j]</span>
+<span class="cm">//   Take item i:       dp[i][j] = dp[i-1][j-w[i]] + v[i]</span>
+
+vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; dp(n+<span class="num">1</span>, vector&lt;<span class="kw">int</span>&gt;(W+<span class="num">1</span>, <span class="num">0</span>));
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt;= W; j++) {
+        dp[i][j] = dp[i-<span class="num">1</span>][j]; <span class="cm">// skip item i</span>
+        <span class="kw">if</span> (j &gt;= w[i])
+            dp[i][j] = max(dp[i][j], dp[i-<span class="num">1</span>][j-w[i]] + v[i]);
+    }
+}
+cout &lt;&lt; dp[n][W];</pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Time: O(N·W)</span>
+      <span class="complexity-pill">Space: O(N·W)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Example 3: Longest Common Subsequence (LCS)</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>string a, b; cin &gt;&gt; a &gt;&gt; b;
+<span class="kw">int</span> n = a.size(), m = b.size();
+vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; dp(n+<span class="num">1</span>, vector&lt;<span class="kw">int</span>&gt;(m+<span class="num">1</span>, <span class="num">0</span>));
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= m; j++)
+        <span class="kw">if</span> (a[i-<span class="num">1</span>] == b[j-<span class="num">1</span>])
+            dp[i][j] = dp[i-<span class="num">1</span>][j-<span class="num">1</span>] + <span class="num">1</span>;
+        <span class="kw">else</span>
+            dp[i][j] = max(dp[i-<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]);
+
+cout &lt;&lt; dp[n][m];</pre>
+    </div>
+  </div>
+
+  <div class="card red">
+    <h3>Example 4: Longest Increasing Subsequence (LIS) — O(N log N)</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>vector&lt;<span class="kw">int</span>&gt; tails; <span class="cm">// tails[i] = smallest tail of LIS of length i+1</span>
+
+<span class="kw">for</span> (<span class="kw">int</span> x : arr) {
+    <span class="kw">auto</span> it = lower_bound(tails.begin(), tails.end(), x);
+    <span class="kw">if</span> (it == tails.end()) tails.push_back(x);
+    <span class="kw">else</span> *it = x;
+}
+cout &lt;&lt; tails.size(); <span class="cm">// LIS length</span></pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Time: O(N log N)</span>
+      <span class="complexity-pill red">Naïve DP: O(N²)</span>
+    </div>
+  </div>
+
+  <div class="tip info"><strong>Memo vs Tabulation:</strong> Top-down (memoization) is easier to code; bottom-up (tabulation) is faster in practice (no recursion overhead). Both give the same answer.</div>
+</div>
+
+<!-- =================== PREFIX SUM =================== -->
+<div id="prefix" class="section">
+  <div class="section-title"><span class="icon">∑</span> Prefix Sums</div>
+  <div class="section-subtitle">Answer range-sum queries in O(1) after O(N) preprocessing</div>
+
+  <div class="card">
+    <h3>1D Prefix Sum</h3>
+    <p>Build array P where P[i] = A[0] + A[1] + … + A[i-1]. Then sum of A[l..r] = P[r+1] - P[l].</p>
+    <div class="visual-box">
+A:  [<span class="hl">3</span>,  <span class="hl2">1</span>,  <span class="hl3">4</span>,  <span class="hl4">1</span>,  5,  9,  2,  6]
+P:  [0,  3,  4,  8,  9, 14, 23, 25, 31]
+
+Sum(A[2..5]) = P[6] - P[2] = <span class="hl">23</span> - <span class="hl">4</span> = <span class="hl">19</span>
+  → 4 + 1 + 5 + 9 = 19 ✓</div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="kw">int</span> n; cin &gt;&gt; n;
+vector&lt;<span class="kw">int</span>&gt; a(n), p(n+<span class="num">1</span>, <span class="num">0</span>);
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) cin &gt;&gt; a[i];
+
+<span class="cm">// Build</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    p[i+<span class="num">1</span>] = p[i] + a[i];
+
+<span class="cm">// Query sum of a[l..r] (0-indexed, inclusive)</span>
+<span class="kw">auto</span> <span class="fn">query</span> = [&amp;](<span class="kw">int</span> l, <span class="kw">int</span> r) {
+    <span class="kw">return</span> p[r+<span class="num">1</span>] - p[l];
+};</pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Build: O(N)</span>
+      <span class="complexity-pill">Query: O(1)</span>
+    </div>
+  </div>
+
+  <div class="card purple">
+    <h3>2D Prefix Sum</h3>
+    <p>For a 2D grid, P[i][j] = sum of rectangle from (0,0) to (i-1, j-1). Query any subrectangle in O(1).</p>
+    <div class="visual-box">
+Grid A:                   Prefix P:
+┌───┬───┬───┬───┐         ┌───┬───┬───┬───┐
+│ 1 │ 2 │ 3 │ 4 │         │ 0 │ 0 │ 0 │ 0 │
+├───┼───┼───┼───┤         ├───┼───┼───┼───┤
+│ 5 │ 6 │ 7 │ 8 │  ──▶   │ 0 │ 1 │ 3 │ 6 │
+├───┼───┼───┼───┤         ├───┼───┼───┼───┤
+│ 9 │10 │11 │12 │         │ 0 │ 6 │14 │24 │
+└───┴───┴───┴───┘         └───┴───┴───┴───┘
+
+Sum rect (r1,c1)→(r2,c2):
+= P[r2+1][c2+1] - P[r1][c2+1] - P[r2+1][c1] + P[r1][c1]</div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="kw">int</span> n, m;
+cin &gt;&gt; n &gt;&gt; m;
+vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; a(n, vector&lt;<span class="kw">int</span>&gt;(m));
+vector&lt;vector&lt;<span class="kw">long long</span>&gt;&gt; p(n+<span class="num">1</span>, vector&lt;<span class="kw">long long</span>&gt;(m+<span class="num">1</span>, <span class="num">0</span>));
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; m; j++)
+        cin &gt;&gt; a[i][j];
+
+<span class="cm">// Build 2D prefix</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= m; j++)
+        p[i][j] = a[i-<span class="num">1</span>][j-<span class="num">1</span>] + p[i-<span class="num">1</span>][j] + p[i][j-<span class="num">1</span>] - p[i-<span class="num">1</span>][j-<span class="num">1</span>];
+
+<span class="cm">// Query sum of rectangle (r1,c1) to (r2,c2), 0-indexed inclusive</span>
+<span class="kw">auto</span> <span class="fn">query</span> = [&amp;](<span class="kw">int</span> r1, <span class="kw">int</span> c1, <span class="kw">int</span> r2, <span class="kw">int</span> c2) -&gt; <span class="kw">long long</span> {
+    <span class="kw">return</span> p[r2+<span class="num">1</span>][c2+<span class="num">1</span>]
+         - p[r1][c2+<span class="num">1</span>]
+         - p[r2+<span class="num">1</span>][c1]
+         + p[r1][c1];
+};</pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Build: O(N·M)</span>
+      <span class="complexity-pill">Query: O(1)</span>
+    </div>
+  </div>
+
+  <div class="tip"><strong>Classic trick:</strong> If you need to add 1 to a range [l, r] many times and then read final values — use a <em>difference array</em>: D[l]++, D[r+1]--, then prefix-sum D to get final values. O(N) total.</div>
+</div>
+
+<!-- =================== BFS =================== -->
+<div id="bfs" class="section">
+  <div class="section-title"><span class="icon">🌊</span> BFS — Breadth-First Search</div>
+  <div class="section-subtitle">Shortest path in unweighted graphs; explores level by level</div>
+
+  <div class="card">
+    <h3>How BFS Works</h3>
+    <p>Start from a source. Visit all nodes at distance 1, then distance 2, etc. Uses a <strong>queue</strong> (FIFO). Guarantees shortest path in unweighted graphs.</p>
+    <div class="visual-box">
+Graph:  1──2──4
+        │  │
+        3──5──6
+
+BFS from 1:
+Level 0: [<span class="hl">1</span>]
+Level 1: [<span class="hl2">2</span>, <span class="hl2">3</span>]
+Level 2: [<span class="hl3">4</span>, <span class="hl3">5</span>]
+Level 3: [<span class="hl4">6</span>]
+
+dist: 1→0, 2→1, 3→1, 4→2, 5→2, 6→3</div>
+  </div>
+
+  <div class="card">
+    <h3>BFS Template</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="kw">int</span> n; <span class="cm">// number of nodes (1-indexed)</span>
+vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; adj(n+<span class="num">1</span>); <span class="cm">// adjacency list</span>
+
+vector&lt;<span class="kw">int</span>&gt; dist(n+<span class="num">1</span>, -<span class="num">1</span>); <span class="cm">// -1 = unvisited</span>
+queue&lt;<span class="kw">int</span>&gt; q;
+
+<span class="kw">int</span> src = <span class="num">1</span>;
+dist[src] = <span class="num">0</span>;
+q.push(src);
+
+<span class="kw">while</span> (!q.empty()) {
+    <span class="kw">int</span> u = q.front(); q.pop();
+
+    <span class="kw">for</span> (<span class="kw">int</span> v : adj[u]) {
+        <span class="kw">if</span> (dist[v] == -<span class="num">1</span>) { <span class="cm">// not visited</span>
+            dist[v] = dist[u] + <span class="num">1</span>;
+            q.push(v);
+        }
+    }
+}
+<span class="cm">// dist[x] = shortest path from src to x (-1 if unreachable)</span></pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Time: O(V + E)</span>
+      <span class="complexity-pill">Space: O(V)</span>
+    </div>
+  </div>
+
+  <div class="card red">
+    <h3>BFS on a 2D Grid</h3>
+    <p>Very common in IOI-style problems: find shortest path from start to end avoiding obstacles.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="kw">int</span> n, m;
+vector&lt;string&gt; grid(n);
+vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; dist(n, vector&lt;<span class="kw">int</span>&gt;(m, -<span class="num">1</span>));
+queue&lt;pair&lt;<span class="kw">int</span>,<span class="kw">int</span>&gt;&gt; q;
+
+<span class="kw">int</span> dx[] = {<span class="num">0</span>,<span class="num">0</span>,<span class="num">1</span>,-<span class="num">1</span>};
+<span class="kw">int</span> dy[] = {<span class="num">1</span>,-<span class="num">1</span>,<span class="num">0</span>,<span class="num">0</span>};
+
+dist[sr][sc] = <span class="num">0</span>;
+q.push({sr, sc});
+
+<span class="kw">while</span> (!q.empty()) {
+    <span class="kw">auto</span> [r, c] = q.front(); q.pop();
+    <span class="kw">for</span> (<span class="kw">int</span> d = <span class="num">0</span>; d &lt; <span class="num">4</span>; d++) {
+        <span class="kw">int</span> nr = r + dx[d], nc = c + dy[d];
+        <span class="kw">if</span> (nr &gt;= <span class="num">0</span> &amp;&amp; nr &lt; n &amp;&amp; nc &gt;= <span class="num">0</span> &amp;&amp; nc &lt; m
+            &amp;&amp; grid[nr][nc] != <span class="str">'#'</span>  <span class="cm">// not a wall</span>
+            &amp;&amp; dist[nr][nc] == -<span class="num">1</span>) {
+            dist[nr][nc] = dist[r][c] + <span class="num">1</span>;
+            q.push({nr, nc});
+        }
+    }
+}
+cout &lt;&lt; dist[er][ec]; <span class="cm">// shortest path to destination</span></pre>
+    </div>
+  </div>
+
+  <div class="tip info"><strong>0-1 BFS:</strong> If edges have weight 0 or 1, use a deque. Push weight-0 to front, weight-1 to back. O(V+E) instead of Dijkstra's O(E log V).</div>
+</div>
+
+<!-- =================== DFS =================== -->
+<div id="dfs" class="section">
+  <div class="section-title"><span class="icon">🌲</span> DFS — Depth-First Search</div>
+  <div class="section-subtitle">Explore as deep as possible; used for connectivity, cycles, topological sort, tree problems</div>
+
+  <div class="card">
+    <h3>How DFS Works</h3>
+    <p>Go as deep as possible along one path before backtracking. Uses a <strong>stack</strong> (or recursion). Does NOT give shortest path (use BFS for that).</p>
+    <div class="visual-box">
+Graph:  1──2──4
+        │  │
+        3──5──6
+
+DFS from 1 (one possible order):
+Visit: <span class="hl">1</span> → <span class="hl2">2</span> → <span class="hl3">4</span> (backtrack) → <span class="hl3">5</span> → <span class="hl4">6</span> (backtrack²) → <span class="hl4">3</span>
+Stack: push 1, push 2, push 4, pop 4, push 5, push 6...</div>
+  </div>
+
+  <div class="card">
+    <h3>Recursive DFS Template</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>vector&lt;vector&lt;<span class="kw">int</span>&gt;&gt; adj(n+<span class="num">1</span>);
+vector&lt;<span class="kw">bool</span>&gt; visited(n+<span class="num">1</span>, <span class="num">false</span>);
+
+<span class="kw">void</span> <span class="fn">dfs</span>(<span class="kw">int</span> u) {
+    visited[u] = <span class="num">true</span>;
+    <span class="cm">// process u here</span>
+
+    <span class="kw">for</span> (<span class="kw">int</span> v : adj[u]) {
+        <span class="kw">if</span> (!visited[v])
+            dfs(v);
+    }
+    <span class="cm">// post-process u here (after all children)</span>
+}
+
+<span class="cm">// Call:</span>
+dfs(<span class="num">1</span>);</pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Time: O(V + E)</span>
+      <span class="complexity-pill">Space: O(V) stack</span>
+    </div>
+  </div>
+
+  <div class="card purple">
+    <h3>Key DFS Applications</h3>
+    <p><strong>Count connected components:</strong> Run DFS from each unvisited node, increment counter.</p>
+    <p><strong>Detect cycles:</strong> Track "in current path" with a color (WHITE/GRAY/BLACK).</p>
+    <p><strong>Topological Sort:</strong> After DFS finishes a node, push to stack. Reverse the stack.</p>
+    <p><strong>Tree: subtree size, depth, LCA:</strong> DFS is the go-to.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++ — Topological Sort</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>vector&lt;<span class="kw">int</span>&gt; order;
+vector&lt;<span class="kw">bool</span>&gt; visited(n+<span class="num">1</span>, <span class="num">false</span>);
+
+<span class="kw">void</span> <span class="fn">topoSort</span>(<span class="kw">int</span> u) {
+    visited[u] = <span class="num">true</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> v : adj[u])
+        <span class="kw">if</span> (!visited[v]) topoSort(v);
+    order.push_back(u); <span class="cm">// post-order</span>
+}
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++)
+    <span class="kw">if</span> (!visited[i]) topoSort(i);
+
+reverse(order.begin(), order.end());</pre>
+    </div>
+  </div>
+
+  <div class="tip warn"><strong>Watch out:</strong> Recursive DFS can hit stack overflow for large N (N > 100,000). Either increase stack size or convert to iterative DFS using an explicit stack.</div>
+
+  <div class="card">
+    <h3>Iterative DFS (safe for large inputs)</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>stack&lt;<span class="kw">int</span>&gt; stk;
+stk.push(src);
+visited[src] = <span class="num">true</span>;
+
+<span class="kw">while</span> (!stk.empty()) {
+    <span class="kw">int</span> u = stk.top(); stk.pop();
+    <span class="cm">// process u</span>
+    <span class="kw">for</span> (<span class="kw">int</span> v : adj[u])
+        <span class="kw">if</span> (!visited[v]) {
+            visited[v] = <span class="num">true</span>;
+            stk.push(v);
+        }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- =================== BINARY CONVERSIONS =================== -->
+<div id="binary" class="section">
+  <div class="section-title"><span class="icon">01</span> Binary Conversions</div>
+  <div class="section-subtitle">All four conversions + interactive demo</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Int → Binary</h3>
+      <p>Use bitset or manual bit extraction.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">int</span> n = <span class="num">42</span>;
+
+<span class="cm">// Method 1: bitset (fixed width)</span>
+string b = bitset&lt;<span class="num">8</span>&gt;(n).to_string();
+<span class="cm">// → "00101010"</span>
+
+<span class="cm">// Method 2: manual (no leading zeros)</span>
+string <span class="fn">toBin</span>(<span class="kw">int</span> n) {
+    <span class="kw">if</span> (n == <span class="num">0</span>) <span class="kw">return</span> <span class="str">"0"</span>;
+    string res;
+    <span class="kw">while</span> (n > <span class="num">0</span>) {
+        res += (char)(<span class="str">'0'</span> + n%<span class="num">2</span>);
+        n /= <span class="num">2</span>;
+    }
+    reverse(res.begin(), res.end());
+    <span class="kw">return</span> res;
+}</pre>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Binary → Int</h3>
+      <p>Use stoi with base 2, or manual shift.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre>string b = <span class="str">"101010"</span>;
+
+<span class="cm">// Method 1: stoi</span>
+<span class="kw">int</span> n = stoi(b, <span class="num">nullptr</span>, <span class="num">2</span>); <span class="cm">// → 42</span>
+
+<span class="cm">// Method 2: bitset</span>
+<span class="kw">int</span> n = (<span class="kw">int</span>)bitset&lt;<span class="num">32</span>&gt;(b).to_ulong();
+
+<span class="cm">// Method 3: manual</span>
+<span class="kw">int</span> n = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">char</span> c : b)
+    n = n * <span class="num">2</span> + (c - <span class="str">'0'</span>);</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card purple">
+      <h3>Str → Binary</h3>
+      <p>Each character → its ASCII value → binary.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre>string s = <span class="str">"Hi"</span>;
+string result;
+<span class="kw">for</span> (<span class="kw">char</span> c : s) {
+    result += bitset&lt;<span class="num">8</span>&gt;((<span class="kw">unsigned char</span>)c).to_string();
+    result += <span class="str">' '</span>; <span class="cm">// optional separator</span>
+}
+<span class="cm">// H = 72 → "01001000"</span>
+<span class="cm">// i = 105→ "01101001"</span></pre>
+      </div>
+    </div>
+    <div class="card red">
+      <h3>Binary → Str</h3>
+      <p>Split into 8-bit chunks → each chunk to int → char.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre>string b = <span class="str">"0100100001101001"</span>; <span class="cm">// "Hi"</span>
+string result;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; b.size(); i += <span class="num">8</span>) {
+    string chunk = b.substr(i, <span class="num">8</span>);
+    <span class="kw">char</span> c = (<span class="kw">char</span>)stoi(chunk, <span class="num">nullptr</span>, <span class="num">2</span>);
+    result += c;
+}
+<span class="cm">// result = "Hi"</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="card yellow">
+    <h3>🎮 Interactive Binary Converter</h3>
+    <div class="demo-box">
+      <label>Enter an integer:</label>
+      <input id="binInput" type="number" placeholder="e.g. 42" />
+      <button class="demo-btn" onclick="convertBinary()">Convert</button>
+      <div class="demo-result" id="binResult"></div>
+    </div>
+    <div class="demo-box">
+      <label>Enter a binary string:</label>
+      <input id="intInput" type="text" placeholder="e.g. 101010" />
+      <button class="demo-btn" onclick="convertToInt()">Convert</button>
+      <div class="demo-result" id="intResult"></div>
+    </div>
+    <div class="demo-box">
+      <label>Enter a string (text → binary):</label>
+      <input id="strInput" type="text" placeholder='e.g. Hello' />
+      <button class="demo-btn" onclick="convertStrBin()">Convert</button>
+      <div class="demo-result" id="strResult"></div>
+    </div>
+  </div>
+
+  <div class="tip"><strong>Bit tricks to remember:</strong> n &amp; 1 checks if odd. n &gt;&gt; k checks bit k. n | (1&lt;&lt;k) sets bit k. n &amp; ~(1&lt;&lt;k) clears bit k. __builtin_popcount(n) counts set bits.</div>
+</div>
+
+<!-- =================== BINARY SEARCH =================== -->
+<div id="bsearch" class="section">
+  <div class="section-title"><span class="icon">🔍</span> Binary Search</div>
+  <div class="section-subtitle">O(log N) search on sorted arrays — and much more</div>
+
+  <div class="card">
+    <h3>Core Idea</h3>
+    <p>If the answer space is <strong>monotone</strong> (all FALSEs then all TRUEs, or vice versa), binary search can find the boundary in O(log N). Works on sorted arrays AND on answer spaces.</p>
+    <div class="visual-box">
+Array: [<span class="hl2">1</span>,  <span class="hl2">3</span>,  <span class="hl2">5</span>,  <span class="hl2">7</span>,  <span class="hl">9</span>,  <span class="hl">11</span>, <span class="hl">13</span>]
+       lo=0              mid=3      hi=6
+
+Target = 9:
+Step 1: mid=3, A[3]=7  &lt; 9  → lo=4
+Step 2: mid=5, A[5]=11 &gt; 9  → hi=4
+Step 3: mid=4, A[4]=9 == 9  → <span class="hl">FOUND!</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Classic Template (find exact value)</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="cm">// Returns index of target in sorted arr, or -1</span>
+<span class="kw">int</span> <span class="fn">binarySearch</span>(vector&lt;<span class="kw">int</span>&gt;&amp; arr, <span class="kw">int</span> target) {
+    <span class="kw">int</span> lo = <span class="num">0</span>, hi = arr.size() - <span class="num">1</span>;
+    <span class="kw">while</span> (lo &lt;= hi) {
+        <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>; <span class="cm">// avoid overflow!</span>
+        <span class="kw">if</span>      (arr[mid] == target) <span class="kw">return</span> mid;
+        <span class="kw">else if</span> (arr[mid] &lt;  target) lo = mid + <span class="num">1</span>;
+        <span class="kw">else</span>                          hi = mid - <span class="num">1</span>;
+    }
+    <span class="kw">return</span> -<span class="num">1</span>;
+}</pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Time: O(log N)</span>
+      <span class="complexity-pill">Space: O(1)</span>
+    </div>
+  </div>
+
+  <div class="card purple">
+    <h3>STL Shortcuts</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="cm">// lower_bound: first position where arr[i] >= x</span>
+<span class="kw">auto</span> it = lower_bound(arr.begin(), arr.end(), x);
+
+<span class="cm">// upper_bound: first position where arr[i] > x</span>
+<span class="kw">auto</span> it = upper_bound(arr.begin(), arr.end(), x);
+
+<span class="cm">// Count occurrences of x:</span>
+<span class="kw">int</span> cnt = upper_bound(arr.begin(), arr.end(), x)
+        - lower_bound(arr.begin(), arr.end(), x);
+
+<span class="cm">// Check if x exists:</span>
+<span class="kw">bool</span> found = binary_search(arr.begin(), arr.end(), x);</pre>
+    </div>
+  </div>
+
+  <div class="card red">
+    <h3>Binary Search on Answer (VERY common in IOI)</h3>
+    <p>Instead of searching an array, search the <em>answer space</em>. "Is it possible to do X with value ≤ mid?" If this is monotone, binary search on mid.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++ — Find minimum feasible value</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="cm">// feasible(x): returns true if answer <= x is achievable</span>
+<span class="kw">bool</span> <span class="fn">feasible</span>(<span class="kw">int</span> x) {
+    <span class="cm">// ... problem-specific check ...</span>
+    <span class="kw">return</span> <span class="num">true</span>; <span class="cm">// or false</span>
+}
+
+<span class="kw">int</span> lo = MIN_ANSWER, hi = MAX_ANSWER;
+<span class="kw">while</span> (lo &lt; hi) {
+    <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="kw">if</span> (feasible(mid))
+        hi = mid;     <span class="cm">// mid works, try smaller</span>
+    <span class="kw">else</span>
+        lo = mid + <span class="num">1</span>; <span class="cm">// mid doesn't work, need bigger</span>
+}
+cout &lt;&lt; lo; <span class="cm">// minimum feasible answer</span></pre>
+    </div>
+  </div>
+
+  <div class="tip"><strong>Golden Rule:</strong> Always write <code>mid = lo + (hi - lo) / 2</code>, never <code>(lo + hi) / 2</code> — it avoids integer overflow when lo + hi exceeds INT_MAX.</div>
+</div>
+
+<!-- =================== BEST SUBARRAY =================== -->
+<div id="subarray" class="section">
+  <div class="section-title"><span class="icon">📊</span> Best Subarray (0s and 1s)</div>
+  <div class="section-subtitle">Find the subarray with the most 1s and fewest 0s — several interpretations & approaches</div>
+
+  <div class="card">
+    <h3>Problem Framing</h3>
+    <p>Given a binary array, find a contiguous subarray that is "best" — most 1s relative to 0s. There are multiple valid interpretations depending on the problem statement:</p>
+    <div class="visual-box">
+Array: [<span class="hl2">0</span>, <span class="hl">1</span>, <span class="hl">1</span>, <span class="hl2">0</span>, <span class="hl">1</span>, <span class="hl">1</span>, <span class="hl">1</span>, <span class="hl2">0</span>]
+
+Best by max 1s count alone:     [1,1,0,1,1,1] → 5 ones
+Best by max (1s - 0s):          [1,1,1]        → score 3
+Max consecutive 1s:             [1,1,1]        → length 3</div>
+  </div>
+
+  <div class="card">
+    <h3>Approach 1: Maximize (1s − 0s) — Transform to max subarray sum</h3>
+    <p>Replace each 1 → +1 and each 0 → -1. Then find the maximum subarray sum using <strong>Kadane's algorithm</strong>. This maximizes (ones − zeros).</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>vector&lt;<span class="kw">int</span>&gt; a = {<span class="num">0</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">0</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">0</span>};
+<span class="kw">int</span> n = a.size();
+
+<span class="cm">// Transform: 0→-1, 1→+1</span>
+vector&lt;<span class="kw">int</span>&gt; b(n);
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    b[i] = (a[i] == <span class="num">1</span>) ? <span class="num">1</span> : -<span class="num">1</span>;
+
+<span class="cm">// Kadane's: find max subarray sum</span>
+<span class="kw">int</span> best = 0, cur = 0;
+<span class="kw">int</span> bestL = <span class="num">0</span>, bestR = -<span class="num">1</span>, curL = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    cur += b[i];
+    <span class="kw">if</span> (cur &gt; best) {
+        best = cur;
+        bestL = curL; bestR = i;
+    }
+    <span class="kw">if</span> (cur &lt; <span class="num">0</span>) { cur = <span class="num">0</span>; curL = i + <span class="num">1</span>; }
+}
+<span class="cm">// best = max (ones - zeros), subarray is a[bestL..bestR]</span>
+cout &lt;&lt; <span class="str">"Score: "</span> &lt;&lt; best &lt;&lt; <span class="str">", from "</span> &lt;&lt; bestL &lt;&lt; <span class="str">" to "</span> &lt;&lt; bestR;</pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Time: O(N)</span>
+      <span class="complexity-pill">Space: O(N)</span>
+    </div>
+  </div>
+
+  <div class="card purple">
+    <h3>Approach 2: Maximum 1s with at most K zeros allowed (Sliding Window)</h3>
+    <p>Find the longest subarray with at most K zeros. Two-pointer / sliding window.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="kw">int</span> K = <span class="num">1</span>; <span class="cm">// allow at most K zeros</span>
+<span class="kw">int</span> left = <span class="num">0</span>, zeros = <span class="num">0</span>, best = <span class="num">0</span>;
+<span class="kw">int</span> bestL = <span class="num">0</span>, bestR = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> right = <span class="num">0</span>; right &lt; n; right++) {
+    <span class="kw">if</span> (a[right] == <span class="num">0</span>) zeros++;
+
+    <span class="kw">while</span> (zeros &gt; K) {
+        <span class="kw">if</span> (a[left] == <span class="num">0</span>) zeros--;
+        left++;
+    }
+
+    <span class="kw">if</span> (right - left + <span class="num">1</span> &gt; best) {
+        best = right - left + <span class="num">1</span>;
+        bestL = left; bestR = right;
+    }
+}
+<span class="cm">// Longest subarray with ≤ K zeros</span></pre>
+    </div>
+    <div class="complexity-row">
+      <span class="complexity-pill">Time: O(N)</span>
+      <span class="complexity-pill">Space: O(1)</span>
+    </div>
+  </div>
+
+  <div class="card red">
+    <h3>Approach 3: Prefix Sum — Count 1s in any range quickly</h3>
+    <p>If you need to compare many subarrays, precompute prefix sum of 1s. Then ones(l,r) = P[r+1] - P[l]. Zeros = (r-l+1) - ones.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>vector&lt;<span class="kw">int</span>&gt; p(n+<span class="num">1</span>, <span class="num">0</span>);
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    p[i+<span class="num">1</span>] = p[i] + a[i]; <span class="cm">// count of 1s</span>
+
+<span class="cm">// For subarray [l, r]:</span>
+<span class="kw">int</span> ones  = p[r+<span class="num">1</span>] - p[l];
+<span class="kw">int</span> zeros = (r - l + <span class="num">1</span>) - ones;
+<span class="kw">int</span> score = ones - zeros;</pre>
+    </div>
+  </div>
+
+  <div class="card yellow">
+    <h3>Approach 4: Maximum consecutive 1s</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">C++ — One pass</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="kw">int</span> best = <span class="num">0</span>, cur = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> x : a) {
+    cur = (x == <span class="num">1</span>) ? cur + <span class="num">1</span> : <span class="num">0</span>;
+    best = max(best, cur);
+}
+cout &lt;&lt; best;</pre>
+    </div>
+  </div>
+
+  <div class="tip info"><strong>Which approach to use?</strong> The problem wording is key. "Most ones and fewest zeros" most likely means maximize (ones − zeros) → use Kadane's on transformed array. "Longest with ≤ K zeros" → sliding window. "Count ones in ranges" → prefix sum.</div>
+</div>
+
+</main>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1500);
+  });
+}
+
+// Binary converter demos
+function convertBinary() {
+  const n = parseInt(document.getElementById('binInput').value);
+  const res = document.getElementById('binResult');
+  if (isNaN(n)) { res.textContent = 'Enter a valid integer'; res.classList.add('show'); return; }
+  const bin = (n >>> 0).toString(2);
+  res.innerHTML = `${n} → <strong>${bin}</strong> (${bin.length} bits)`;
+  res.classList.add('show');
+}
+
+function convertToInt() {
+  const b = document.getElementById('intInput').value.trim();
+  const res = document.getElementById('intResult');
+  if (!/^[01]+$/.test(b)) { res.textContent = 'Enter a valid binary string (0s and 1s only)'; res.classList.add('show'); return; }
+  const n = parseInt(b, 2);
+  res.innerHTML = `${b} → <strong>${n}</strong>`;
+  res.classList.add('show');
+}
+
+function convertStrBin() {
+  const s = document.getElementById('strInput').value;
+  const res = document.getElementById('strResult');
+  if (!s) { res.textContent = 'Enter some text'; res.classList.add('show'); return; }
+  const bins = s.split('').map(c => c.charCodeAt(0).toString(2).padStart(8, '0'));
+  res.innerHTML = bins.map((b, i) => `'${s[i]}' (${s.charCodeAt(i)}) → <strong>${b}</strong>`).join('<br>');
+  res.classList.add('show');
+}
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  const sections = ['interactives','dp','prefix','bfs','dfs','binary','bsearch','subarray'];
+  const buttons = document.querySelectorAll('nav button');
+  const active = [...buttons].findIndex(b => b.classList.contains('active'));
+  if (e.key === 'ArrowRight' && active < sections.length - 1) buttons[active+1].click();
+  if (e.key === 'ArrowLeft'  && active > 0) buttons[active-1].click();
+});
+</script>
+</body>
+</html>
